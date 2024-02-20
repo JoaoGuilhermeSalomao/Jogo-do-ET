@@ -58,7 +58,7 @@
             // o que acontece aqui?
             this.add.image(larguraJogo/2, alturaJogo/2, 'background');
 
-            //
+            //adição do sprite do turbo e tornando-o invisível
             fogo = this.add.sprite(0, 0, 'turbo');
             fogo.setVisible(false);
 
@@ -66,22 +66,23 @@
             alien = this.physics.add.sprite(larguraJogo/2, 0, 'player');
             alien.setCollideWorldBounds(true);
 
-            //
+            //teclado
             teclado = this.input.keyboard.createCursorKeys();
 
+            //adição da plataforma e configuração da colisão
             plataforma = this.physics.add.staticImage(larguraJogo/2, alturaJogo/3, 'tijolo');
             this.physics.add.collider(alien, plataforma);
 
             plataforma_2 = this.physics.add.staticImage(larguraJogo/2, 2*alturaJogo/3, 'tijolo');
             this.physics.add.collider(alien, plataforma_2);
 
-            //
+            //adição e configuração da moeda
             moeda = this.physics.add.sprite(-100, -100, 'moeda');
             moeda.setCollideWorldBounds(true);  
             moeda.setBounce(0.7);
             this.physics.add.collider(moeda, plataforma);
 
-            // adicionando placar 
+            // adição do placar 
             placar = this.add.text(50, 50, 'Moedas: ' + pontuacao, {fontSize:'45px', fill:'#495613'});
 
             // interação alien/moeda
