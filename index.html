@@ -45,6 +45,8 @@
         var moeda;
         var pontuacao = 0;
         var placar;
+        var verde;
+        var roxo;
         
         function preload() {
             this.load.image('background', 'assets/bg.png');
@@ -52,6 +54,8 @@
             this.load.image('turbo', 'assets/turbo.png');
             this.load.image('tijolo', 'assets/tijolos.png');
             this.load.image('moeda', 'assets/moeda.png');
+            this.load.spritesheet('verde', 'assets/bird-green.png', {frameWidth: 75, frameHeight: 75});
+            this.load.spritesheet('roxo', 'assets/bird-purple.png', {frameWidth: 75, frameHeight: 75});
         }
 
         function create() {
@@ -97,28 +101,94 @@
 
                 moeda.setVisible(true);
             })
+
+            roxo = this.physics.add.sprite(100, 425, 'roxo').setScale(1.3);
+            roxo.body.allowGravity = false;
+            roxo.setCollideWorldBounds(true);  
+            roxo.setBounce(0.7);
+            this.anims.create ({
+                key: 'voo',
+                frames: this.anims.generateFrameNumbers('roxo', {start: 0, end: 7}),
+                frameRate: 10,
+                repeat: -1
+            })
+
+            roxo.anims.play('voo', true);
+            
+            this.physics.add.overlap(alien, roxo, function() {
+                pontuacao -=1;
+                placar.setText('Moedas: ' + pontuacao);
+            })
+
+            verde = this.physics.add.sprite(600, 710, 'verde').setScale(1.3);
+            verde.body.allowGravity = false;
+            verde.setCollideWorldBounds(true);  
+            verde.setBounce(0.7);
+            this.anims.create ({
+                key: 'voo',
+                frames: this.anims.generateFrameNumbers('roxo', {start: 0, end: 7}),
+                frameRate: 10,
+                repeat: -1
+            })
+            this.anims.create ({
+                key: 'fly',
+                frames: this.anims.generateFrameNumbers('verde', {start: 0, end: 7}),
+                frameRate: 10,
+                repeat: -1
+            })
+
+            verde.anims.play('fly', true);
+
+            this.physics.add.overlap(alien, verde, function() {
+                pontuacao -=1;
+                placar.setText('Moedas: ' + pontuacao);
+
+            })
+
         }
 
         function update() {
             if (teclado.left.isDown){
-                alien.setVelocityX(-150); 
+                alien.setVelocityX(-450); 
             }
             else if (teclado.right.isDown){
-                alien.setVelocityX(+150); 
+                alien.setVelocityX(+450); 
             }
             else {
                 alien.setVelocityX(0);
             }
 
             if (teclado.up.isDown){
-                alien.setVelocityY(-150); 
+                alien.setVelocityY(-400); 
                 ativarTurbo();
             }
             else {
                 semTurbo();
             }
 
-            fogo.setPosition(alien.x, alien.y + alien.height/2)
+            fogo.setPosition(alien.x, alien.y + alien.height/2);
+
+            if (roxo.x === 100) {
+            roxo.ida = true,
+            roxo.setFlip (false, false),
+            verde.setFlip (true, false);
+            } 
+
+            if (roxo.x < 600 && roxo.ida === true) {
+                roxo.x +=2,
+                verde.x -=2;
+            } 
+        
+            if (roxo.x === 600) {
+                roxo.ida = false,
+                roxo.setFlip (true, false),
+                verde.setFlip (false, false);
+            } 
+
+            if (roxo.x > 100 && roxo.ida === false) {
+                roxo.x -=2,
+                verde.x +=2;
+            } 
         }
         
         function ativarTurbo() {
